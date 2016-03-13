@@ -26,6 +26,7 @@ boolean moveUp=false;
 boolean moveDown=false;
 
 boolean userControl = true; //wack integer boolean flag
+boolean increasing = true; //current direction of the servo in sweep mode
 
 int pressed= -1; //this variable will determine whether joystick has been pressed down (selected)
 int x= -1;//this variable will hold the X-coordinate value
@@ -124,17 +125,21 @@ void loop() {
     }
 
     else if (userControl==false){
-          for (int pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-            // in steps of 1 degree
-            servox.write(pos);              // tell servo to go to position in variable 'pos'
-            delay(15);                       // waits 15ms for the servo to reach the position
-          }
-          for (int pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-            servox.write(pos);              // tell servo to go to position in variable 'pos'
-            delay(15);                       // waits 15ms for the servo to reach the position
-          }
-          
+      if(increasing){
+        servox.write(servox.read() + 1);
+      //  delay(15);
+        if(servox.read() >= 180){
+          increasing = false;
+        }
       }
-      delay(15);
+      else{
+        servox.write(servox.read() - 1);
+        //delay(15);
+        if(servox.read() <= 0){
+          increasing = true;
+        }
+      }
+   }
+   delay(14);
       
 }
